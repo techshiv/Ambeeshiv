@@ -124,7 +124,7 @@ def on_message(client1, userdata, message):
     "PM1":data["P1"],
     "PM25":data["P25"],
     "PM10":data["P10"],
-    "CO":data["co"] }},upsert=True )
+    "CO2":data["co2"] }},upsert=True )
 
     
     

@@ -5,7 +5,7 @@ import time
 import json
 from flask_socketio import SocketIO, emit
 import pymongo
-
+import datetime
 
 global name
 global val
@@ -25,7 +25,8 @@ jd = {}
 
 client = pymongo.MongoClient("mongodb+srv://ambeedev:Ambee90526@ambee-db1-jwqfm.mongodb.net/ambee_gdata?retryWrites=true&w=majority")
 db = client.ambee_gdata
-
+col = db.devices
+col2 = db.readings
 #mydb = myclient["sensorvalue"]
 #mycol = mydb["dht11"]
 
@@ -101,9 +102,9 @@ def on_message(client1, userdata, message):
     socketio.emit('PM1', {'data': data["P1"]})
     socketio.emit('PM25', {'data': data["P25"]})
     socketio.emit('PM10', {'data': data["P10"]})
-    socketio.emit('CO', {'data': data["Noise"]})
-#    socketio.emit('HCHO',{'data':data["HCHO"]})
+    socketio.emit('CO', {'data': data["co2"]})
     
+        
     {
     "devID":data["MAC"],
     "createdAT": data["Tim"],
@@ -113,11 +114,11 @@ def on_message(client1, userdata, message):
     "PM1":data["P1"],
     "PM25":data["P25"],
     "PM10":data["P10"],
-    "CO":data["co"]
+    "CO":data["co2"]
     }
-    
-    db.devices.update_one({"devID":data["MAC"]},{"$set":{"devID":data["MAC"],
-    "createdAT": data["Tim"],
+    mac = str(data["MAC"])
+    col.update_one({"devId":mac},{"$set":{"devId":mac,
+    "updatedAt":datetime.datetime.now(),
     "temperature": data["Tem"], 
     "humidity": data["hum"],
     "Pressure":data["pres"],
@@ -125,9 +126,21 @@ def on_message(client1, userdata, message):
     "PM25":data["P25"],
     "PM10":data["P10"],
     "CO2":data["co2"] }},upsert=True )
-
+    print("im IEMI NUMBER")
+    print(data["MAC"])
     
-    
+    col2.insert_one({"devId":mac,
+    "createdAt":datetime.datetime.now(),
+    "temperature": data["Tem"],
+    "humidity": data["hum"],
+    "Pressure":data["pres"],
+    "PM1":data["P1"],
+    "PM25":data["P25"],
+    "PM10":data["P10"],
+    "CO2":data["co2"] } )
+    print("im IEMI NUMBER")
+    print(data["MAC"])
+        
     '''##   global name
         global val
         global node1

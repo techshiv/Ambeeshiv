@@ -67,80 +67,82 @@ def on_message(client1, userdata, message):
    # print("Received message '" + str(message.payload) + "' on topic '"
    #     + message.topic + "' with QoS " + str(message.qos))
     
-    
-    data = (message.payload)
-    data = data.decode('utf8')
-   # print(message.payload) 
-    data = json.loads(data)
-    #print(sg)
-    print("new data helooooooo")
-    print(data)
-   # print(data["MAC"])
-   # print(y)   
-    #print(data)
-    #print(data["MAC"])
-    jd["mac"] = data["MAC"]
-    #jd["data"] = sg
-    jsondata= json.dumps(jd)
-    
-    global found
-    print(found)
-       
-    if found == 0:
-        found
-        print(sg)
-        print("hellorrrfdsdsdfrfbrkhgfrjhgfhrjfjhrfjhrbfrb")
-        client1.publish('devices',sg)
-       # found =1
-        found = 1 
-    
-    socketio.emit('mac', {'data': data["MAC"]})
-    socketio.emit('time', {'data': data["Tim"]})
-    socketio.emit('temp', {'data': data["Tem"]})
-    socketio.emit('pressure', {'data': data["pres"]})
-    socketio.emit('humudity', {'data': data["hum"]})
-    socketio.emit('PM1', {'data': data["P1"]})
-    socketio.emit('PM25', {'data': data["P25"]})
-    socketio.emit('PM10', {'data': data["P10"]})
-    socketio.emit('CO', {'data': data["co2"]})
-    
+    try:
         
-    {
-    "devID":data["MAC"],
-    "createdAT": data["Tim"],
-    "temperature": data["Tem"], 
-    "humidity": data["hum"],
-    "Pressure":data["pres"],
-    "PM1":data["P1"],
-    "PM25":data["P25"],
-    "PM10":data["P10"],
-    "CO":data["co2"]
-    }
-    mac = str(data["MAC"])
-    col.update_one({"devId":mac},{"$set":{"devId":mac,
-    "updatedAt":datetime.datetime.now(),
-    "temperature": data["Tem"], 
-    "humidity": data["hum"],
-    "Pressure":data["pres"],
-    "PM1":data["P1"],
-    "PM25":data["P25"],
-    "PM10":data["P10"],
-    "CO2":data["co2"] }},upsert=True )
-    print("im IEMI NUMBER")
-    print(data["MAC"])
-    
-    col2.insert_one({"devId":mac,
-    "createdAt":datetime.datetime.now(),
-    "temperature": data["Tem"],
-    "humidity": data["hum"],
-    "Pressure":data["pres"],
-    "PM1":data["P1"],
-    "PM25":data["P25"],
-    "PM10":data["P10"],
-    "CO2":data["co2"] } )
-    print("im IEMI NUMBER")
-    print(data["MAC"])
+        data = (message.payload)
+        data = data.decode('utf8')
+       # print(message.payload) 
+        data = json.loads(data)
+        #print(sg)
+        print("new data helooooooo")
+        print(data)
+       # print(data["MAC"])
+       # print(y)   
+        #print(data)
+        #print(data["MAC"])
+        jd["mac"] = data["MAC"]
+        #jd["data"] = sg
+        jsondata= json.dumps(jd)
         
+        global found
+        print(found)
+           
+        if found == 0:
+            found
+            print(sg)
+            print("hellorrrfdsdsdfrfbrkhgfrjhgfhrjfjhrfjhrbfrb")
+            client1.publish('devices',sg)
+           # found =1
+            found = 1 
+        
+        socketio.emit('mac', {'data': data["MAC"]})
+        socketio.emit('time', {'data': data["Tim"]})
+        socketio.emit('temp', {'data': data["Tem"]})
+        socketio.emit('pressure', {'data': data["pres"]})
+        socketio.emit('humudity', {'data': data["hum"]})
+        socketio.emit('PM1', {'data': data["P1"]})
+        socketio.emit('PM25', {'data': data["P25"]})
+        socketio.emit('PM10', {'data': data["P10"]})
+        socketio.emit('CO', {'data': data["co2"]})
+        
+            
+        {
+        "devID":data["MAC"],
+        "createdAT": data["Tim"],
+        "temperature": data["Tem"], 
+        "humidity": data["hum"],
+        "Pressure":data["pres"],
+        "PM1":data["P1"],
+        "PM25":data["P25"],
+        "PM10":data["P10"],
+        "CO":data["co2"]
+        }
+        mac = str(data["MAC"])
+        col.update_one({"devId":mac},{"$set":{"devId":mac,
+        "updatedAt":datetime.datetime.now(),
+        "temperature": data["Tem"], 
+        "humidity": data["hum"],
+        "Pressure":data["pres"],
+        "PM1":data["P1"],
+        "PM25":data["P25"],
+        "PM10":data["P10"],
+        "CO2":data["co2"] }},upsert=True )
+        print("im IEMI NUMBER")
+        print(data["MAC"])
+        
+        col2.insert_one({"devId":mac,
+        "createdAt":datetime.datetime.now(),
+        "temperature": data["Tem"],
+        "humidity": data["hum"],
+        "Pressure":data["pres"],
+        "PM1":data["P1"],
+        "PM25":data["P25"],
+        "PM10":data["P10"],
+        "CO2":data["co2"] } )
+        print("im IEMI NUMBER")
+        print(data["MAC"])
+    except:
+        print("Invalid data format")
     '''##   global name
         global val
         global node1
